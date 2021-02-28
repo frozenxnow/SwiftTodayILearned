@@ -260,4 +260,41 @@ guard문은 함수를 중지하는 메서드를 가지고 있어야 하는데, f
 
  `Void`와의 차이점을 살펴보겠습니다.
 
-Void도 마찬가지로 리턴이 없다는것을 의미하지만 흐름을 제어하는 문장이 아니기 때문에, terminate() 함수를 호출했을 때 프로그램이 종료된다는 보장이 없습니다. 따라서 위의 guard문에서는 'throw이나 return이 없다'는 내용의 컴파일 에러가 발생합니다.
+Void도 마찬가지로 리턴이 없다는것을 의미하지만 흐름을 제어하는 문장이 아니기 때문에, terminate() 함수를 호출했을 때 프로그램이 종료된다는 보장이 없습니다. 따라서 위의 guard문에서는 'throw이나 return이 없다'는 내용의 컴파일 에러가 발생합니다. 
+
+# 12. @discardableResult
+
+버릴 수 있는 결과라는 뜻으로 직역이 가능합니다. 함수/메서드에 선언하는 attribute입니다. 
+
+`@discardableResult` 라는 키워드를 function 앞에 명시해주면 됩니다. 
+
+ 
+
+```swift
+// @discarableResult
+func doSomething()  {
+    print("Something")
+} // return값이 없기 때문에, @discardableResult 키워드를 추가해도 아무 일이 일어나지 않습니다.
+
+@discardableResult 
+func saySomething() -> String {
+    return "Hello"
+} 
+doSomething() // console에 "Something" 출력
+saySomething() // 출력값이 없으나 @discardableResult 키워드로 인해 경고창이 나타나지 않습니다.
+```
+
+두번째 함수는 문자열을 리턴하고 있습니다. 프로그램 실행 시 메서드는 사용하되, 이 함수의 결과물인 리턴값을 사용하지 않는 경우 컴파일러는 '리턴 값이 사용되지 않음'을 경고합니다. 
+
+이 경고는 논리적 에러를 사전에 방지하기 위해 나타나는 것이지만 그대로 두어도 에러가 나지 않는 경우가 많습니다. 이 경고를 무시하고 리턴값을 버리겠다는 의미로 @discardableResult 키워드를 함수 앞에 붙이는 것여주면 함수 사용 시 리턴값을 사용하지 않아도 더이상 경고를 띄우지 않습니다. 
+
+이미 특정 함수를 사용했고 리턴값을 사용하지 않는다는 것을 알아차렸을 때, 함수를 수정할 수 있다면 위와 같은 방법으로 해당 함수를 찾아가 `@discardableResult`를 붙여주면 됩니다. 함수를 수정할 수 없는 경우에는 아래와 같이 와일드카드를 사용해 함수를 호출하면 경고를 무시할 수 있습니다.
+
+```swift
+func saySomething() -> String {
+    return "Hello"
+} 
+
+_ = saySomething() 
+// 출력값 없고 함수 선언시 @discardableResult가 없지만 와일드카드로 인해 경고창이 나타나지 않습니다.
+```
