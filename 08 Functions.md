@@ -115,11 +115,149 @@ functionName
 
 # 8. Function Types (first-class-citizen)
 
-Swift에서는 값이 없다는 것을 void가 아닌 빈 괄호`()`로 표기합니다.
+Swift에서는 값이 없다는 것을 빈 괄호`()`로 표기합니다. 
 
 ```swift
 // 파라미터와 리턴 값이 없는 functionType
 functionName() -> ()
 ```
 
- ** 함수 9~12 다시 한번 듣고 정리하기
+# 9. Nested Functions
+
+함수에 포함된 즉, 내포된 함수를 의미합니다. 함수가 말 그대로 다른 함수 내부에 들어있는 경우인데, 이 경우에는 해당 함수를 호출할 수 있는 범위가 달라집니다. 
+
+```swift
+func outer() {
+	print("outer")
+}
+func inner() {
+	print("inner")
+}
+
+outer() // "outer"
+inner() // "inner"
+```
+
+inner() 함수와 outer() 함수를 global scope에서 선언했을 때 이들은 global scope에서 호출이 가능합니다. 
+
+```swift
+func outer() {
+	func inner() {
+		print("inner")
+	}
+	print("outer")
+	inner()
+}
+
+outer() // "outer" \n "inner"
+// inner() error : 더이상 global scope에서 호출할 수 없다.
+```
+
+그러나 inner() 함수를 outer() 함수에 내포되도록 코드를 변경하면 inner() 함수는 더이상 global scope에서 호출이 불가능하고, outer() 함수 내부에서 호출이 가능해집니다.
+
+함수를 리턴하는 outer() 함수를 선언하겠습니다.
+
+```swift
+func outer() -> () -> () {
+	func inner() {
+		print("inner")
+	}
+	print("outer")
+	return inner
+}
+
+let f = outer() // inner
+f() // inner() 호출
+```
+
+nested function을 리턴하면 이 함수를 사용할 수 있는 범위가 global scope로 확장됩니다. 직접 호출이 아닌 간접 호출입니다. outer() 함수를 상수에 저장하여 inner()를 호출해도 되지만, outer()()와 같은 방식으로도 호출이 가능합니다. 
+
+# 10. Implicit Return
+
+어떤 값을 리턴하는 함수에서의 표현식이 `단일표현식`일 경우 return 키워드를 생략할 수 있습니다.
+
+```swift
+func add (a: Int, b: Int) -> Int {
+	/* return */ a + b
+}
+
+주석처리한 부분은 생략이 가능합니다. 
+```
+
+단일표현식일 경우에만 가능한 것입니다. 만약 함수 내부에 두 개 이상의 표현식이 구현되어 있다면 return 키워드를 반드시 작성해 어떤 값을 리턴하는 것인지 컴파일러에게 확실히 알려주어야합니다. 
+
+`Impliccit Return`은 함수 뿐 아니라 값을 리턴하는 문법에서 동일하게 사용합니다. 
+
+# 11. Nonreturning Functions
+
+`return`에 대한 이해가 필요합니다.
+
+return은 값을 리턴하는 의미와 동시에 현재 실행중인 함수를 종료합니다. 
+
+또한 다음 함수로 제어를 전달하는 역할도 가지고 있기 때문에 전체 코드는 끊임없이 진행됩니다.
+
+그렇다면 `Nonreturning`은 값을 리턴하지 않는다는 의미를 가지고 있으며, 또한 함수를 호출하는 코드 다음으로 제어를 전달하지 않습니다. Nonereturning Function을 실행할 경우 1) 함수 body에서 함수를 종료하거나 2) 에러를 처리하는 코드로 제어가 전달됩니다. 
+
+```swift
+func functionName() -> Never {
+ // code
+}
+```
+
+Never은 빈 열거형으로 선언되어 있고, 인스턴스를  생성할 수 없는 형식(Uninhabited Type)입니다. 
+
+**1) 함수 body에서 함수를 종료하는 경우**
+
+```swift
+func functionName() -> Never {
+	fatalError()
+}
+```
+
+`fatalError()` 는 즉시 프로그램 실행을 중지하는 대표적인 함수로 주로 디버깅 용도로 사용합니다. 매개변수로 문자열을 전달해 콘솔에 출력할 수 있고, functionName()의 함수를 호출한 후의 메서드는 아무것도 실행되지 않습니다. 
+
+**2) 에러를 처리하는 코드로 제어를 전달하는 경우**
+
+```swift
+enum Myerror: Error {
+    case error
+}
+
+func doSomethingAndAlwaysThrow() throws -> Never {
+    throw Myerror.error  // 항상 error를 던지는 함수
+}
+
+do {
+    try doSomethingAndAlwaysThrow() // error를 던지기 때문에
+    print("after try") // 이 함수는 항상 실행되지 않습니다
+} catch {
+    print(error) // 콘솔에 출력되는 내용
+}
+
+// 콘솔 결과 : error
+```
+
+항상 error를 던지는 doSomethingAndAlwaysThrow()로인해 do 블럭에서는 해당 함수를 실행한 후 (print()함수는 실행하지 않고) 블록을 빠져나와 catch 블록을 실행합니다.
+
+```swift
+func terminate() -> Never {
+    fatalError("positive only") // 프로그램을 중지 시키고 콘솔에 error: positive only 출력
+~~}~~
+
+func doSomething(with value: Int) -> Int {
+    guard value >= 0 else {
+        terminate() // 매개변수가 음수일 경우 terminate() 실행
+    }
+    return 0
+}
+
+doSomething(with: -1) // 음수이기 때문에 terminate()에 의해 프로그램 종료
+```
+
+doSomething의 매개변수로 음수를 받을 경우 guard문의 else 블록이 실행됩니다. 
+
+guard문은 함수를 중지하는 메서드를 가지고 있어야 하는데, fitalError()문을 실행하는 nonreturning function인 `terminate()` 함수 자체가 프로그램을 종료하는 함수이기 때문에 guard문을 중지하는 제어문 역할을 하고있습니다. 
+
+ `Void`와의 차이점을 살펴보겠습니다.
+
+Void도 마찬가지로 리턴이 없다는것을 의미하지만 흐름을 제어하는 문장이 아니기 때문에, terminate() 함수를 호출했을 때 프로그램이 종료된다는 보장이 없습니다. 따라서 위의 guard문에서는 'throw이나 return이 없다'는 내용의 컴파일 에러가 발생합니다.
