@@ -635,14 +635,13 @@ if let range = emailAddress.range(of: emailPattern, options: [.regularExpression
 }
 ```
 
-여기에서 궁금했던 것은 upperBound, lowerBound 였는데, 이는 범위 중 가장 큰 문자열과 가장 작은 문자열을 반환하는 함수입니다. 
+위 실행문이 이해가 가지 않아서 문의를 남겼는데 빨간날에도 답변이 왔습니다. 
 
-```swift
-("a"..."z").lowerBound // "a"
-("a"..."z").upperBound // "z"
-```
+**질의내용**
 
-- 아직 저 위의 tuple을 비교하는 컨디션이 어떤 것을 의미하는지는 잘 모르겠습니다. 추후에 추가할 수 있기를..!
+![String%20and%20Character%2050dd4d65dd444b679a17889029e34241/_2021-03-01__11.39.51.png](String%20and%20Character%2050dd4d65dd444b679a17889029e34241/_2021-03-01__11.39.51.png)
+
+패턴과 일치하는 문자열과 검색을 실행했던 문자열의 범위가 서로 일치하는지 확인하는 과정이었습니다. 바꾸어 말하면 `내가 검색했던 그 이메일이 패턴과 일치하는 문자열만 존재하는지!` 이것을 알아본다고 생각하면 될 것 같습니다. 
 
 # 15. Character Set
 
