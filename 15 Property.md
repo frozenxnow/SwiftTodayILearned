@@ -177,3 +177,79 @@ stepCounter.totalStep = 1000
 willSet은 1000으로 설정한다는 메시지를 출력하고, didSet은 추가된 걸음수(800)에 대한 메시지를 출력합니다.
 
 어떤 상황에서 사용하는 것인지는 아직 잘 모르겠습니다만 이해는 했습니다! 🤧
+
+# 4. Type Property
+
+형식 속성입니다. 저장형식속성과, 계산형식속성이 있습니다.
+
+## 1) 저장형식속성
+
+저장속성 선언시 앞에 `static` 키워드를 붙이면 저장 형식 속성이 됩니다. 
+
+저장속성은 기본값을 생략하고 생성자에서 초기화를 할 수 있었으나, 저장형식속성은 생성자가 없기 때문에 `기본값을 생략할 수 없습니다`. 
+
+저장형식속성은 기본적으로 `지연속성`이기 때문에 `초기화` 시점은 `속성에 최초로 접근할 때`입니다. 
+
+호출할 때에는 인스턴스가 아닌 `형식 이름을 통해 접근`해야합니다.
+
+```swift
+class Math {
+	static let pi = 3.14 // static + stored property = 저장형식속성
+}
+
+let m = Math()
+m.pi // error! 저장형식속성은 인스턴스로 접근하지 않습니다.
+Math.pi // TypeName을 사용해 저장형식속성에 접근하며, 이 때 초기화가 됩니다.
+```
+
+## 2) 계산형식속성
+
+`static` 키워드와 `class` 키워드가 있습니다.
+
+`class` 키워드가 있는 계산형식속성은 클래스에서 제한적으로 사용되며, `오버라이딩이 허용`되는 반면
+
+`static` 키워드가 있는 계산형식속성은 subclass에서 `오버라이딩이 불가능`합니다.
+
+```swift
+enum Weekday: Int { // rawValue를 가진 Weekday 열거형 선언
+	case sunday = 1 // 초기값 1로 지정 
+	case monday
+	case tuesday
+  case wednesday
+  case thursday
+  case friday
+  case saturday
+
+	static var today: Weekday {
+		let cal = Calendar.current
+		let today = Date() // 오늘 날짜 저장 
+		let Weekday = cal.component(.weekday, from: today)
+		return Weekday(rawValue: weekday)!
+	}
+}
+```
+
+위 계산형식속성을 이해하기 위해 날짜에 관련된 메서드를 몇 가지 알아보겠습니다. 아래의 링크를 참고했습니다.
+
+[Swift3 ) 왕초보를 위한 날짜와 시간(Date)사용해보기 (1/2)](https://zeddios.tistory.com/134)
+
+```swift
+var date = Date() // 지금 이 시점의 연월일시분초
+
+var cal = Calendar.current // 그레고리력을 사용하고 있습니다.
+
+// 아래는 현재 날짜가 담겨있는 date에서 연,월,일,시,분,초,요일을 뽑아내는 메서드입니다.
+var currentYear = cal.component(.year, from: date)
+var currentMonth = cal.component(.month, from: date)
+var currentDay = cal.component(.day, from: date)
+var currentHour = cal.component(.hour, from: date)
+var currentMinute = cal.component(.minute, from: date)
+var currentSecond = cal.component(.second, from: date)
+var currentWeekday = cal.component(.weekday, from: date)
+```
+
+이 중 요일이 담긴 숫자를 반환하는 메서드를 사용했습니다. `cal.component(.weekday, from: date)`
+
+여기에서 요일은 일요일(1), 월요일(2), ... 토요일(7)까지 있으며 해당 요일과 맞는 정수를 리턴합니다. 
+
+rawValue 값으로 이 정수를 갖는 케이스를 반환합니다. 이때, 일치하지 않는 숫자가 입력될 경우 `nil`이 리턴되기 때문에 옵셔널을 벗겨냈습니다. (바인딩하는 것이 더 안전하지만 예제에서는 강제추출 하겠습니다.)
