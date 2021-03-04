@@ -57,7 +57,7 @@ post.attachment // attachment가 초기화되어 콘솔에 img가 출력됩니�
 
 # 2. Computed Property
 
-계산 속성입니다. 다른 속성값을 기반으로 속성의 값이 결정되기 때문에 `var`로 선언해야 합니다. 메모리 공간을 갖지 않고, **선언 시점에 기본값을 저장**할 수 없습니다. 따라서 타입 추론이 불가능해 **타입을 반드시 선언**해주어야 합니다. 
+계산 속성입니다. 다른 속성값을 기반으로 속성의 값이 결정되기 때문에 `var`로 선언해야 합니다. 메모리 공간을 갖지 않고, **선언 시점에 기본값을 저장할 수 없습니다**. 따라서 타입 추론이 불가능해 **타입을 반드시 선언**해주어야 합니다. 
 
 ```swift
 var name: Type {
@@ -252,4 +252,136 @@ var currentWeekday = cal.component(.weekday, from: date)
 
 여기에서 요일은 일요일(1), 월요일(2), ... 토요일(7)까지 있으며 해당 요일과 맞는 정수를 리턴합니다. 
 
-rawValue 값으로 이 정수를 갖는 케이스를 반환합니다. 이때, 일치하지 않는 숫자가 입력될 경우 `nil`이 리턴되기 때문에 옵셔널을 벗겨냈습니다. (바인딩하는 것이 더 안전하지만 예제에서는 강제추출 하겠습니다.)
+rawValue 값으로 이 정수를 갖는 케이스를 반환합니다. 이때, 일치하지 않는 숫자가 입력될 경우 `nil`이 리턴되기 때문에 옵셔널을 벗겨냈습니다. (바인딩하는 것이 더 안전하지만 예제에서는 강제추출을 사용했습니다.)
+
+# 5. Self & Super
+
+형식에 기본적으로 추가되는 특별한 속성
+
+## 1) Self
+
+```swift
+self // 인스턴스 자체에 접근
+self.propertyName // 인스턴스의 속성에 접근 (self. 생략 가능)
+self.method() // 인스턴스의 메서드 호출 (self. 생략 가능)
+self[index] // subscript 호출시 사용
+self.init(parameters) // 동일한 형식에 있는 다른 생성자 호출
+```
+
+우리가 직접 선언하지 않습니다. 인스턴스에 자동으로 추가됩니다. 인스턴스 멤버 내부에서 사용하면 현재 인스턴스에 접근하고, 타입 멤버 내부에서 사용하면 형식 자체에 접근합니다.
+
+`Size 클래스`를 이용해 알아보겠습니다.
+
+```swift
+class Size {
+	var width = 0.0
+	var height = 0.0
+
+	func calcArea() -> Double {
+		// return width * height
+		return self.width * self.height // self.생략 가능
+	}
+
+	var area: Double {
+		// return clacArea()
+		return self.calcArea() // self. 생략 가능 
+	}
+	
+	func update(width: Double, height: Double) {
+		self.width = width 
+		self.height = height 
+	} // self. 생략 불가능 : 파라미터와 속성을 구분해야하기 때문입니다.
+
+	func doSomething() {
+		let c = { self.width * self.height }
+	} // 클로저에서 인스턴스의 속성을 사용하기 위해서 값을 캡쳐해야 합니다.
+		// self.를 통해 명시적으로 접근해야 합니다. 
+	
+	static let unit = ""
+
+	static func doSomething() {
+		// unit 
+		self.unit // self. 생략 가능
+	} // 타입 프로퍼티에서의 self는 인스턴스가 아닌 형식을 나타냅니다.
+```
+
+`Size 구조체`에서는 생성자를 이용해 인스턴스를 초기화할 수 있습니다.
+
+```swift
+struct Size {
+	var width = 0.0
+	var height = 0.0
+
+	mutating func reset(value: Double) {
+		self = Size(width: value, height: value)
+}
+```
+
+인스턴스가 새로운 인스턴스로 교체됩니다. 생성자를 통해 인스턴스를 초기화하는 방법은 클래스에서는 사용할 수 없습니다.
+
+## 2) Super
+
+사용 방법은 self와 유사하지만, `상속`과 관련된 키워드이기 때문에 클래스에서만 사용할 수 있습니다.
+
+super클래스에 있는 멤버에 접근하기 위해 사용합니다.
+
+```swift
+super.propertyName
+super.method()
+super[index]
+super.init(parameters)
+```
+
+# 6. Self Type
+
+self 속성이 아닌, Self라는 Type입니다.
+
+주로 extension에서 사용하며 열거형, 구조체, 클래스를 선언할 때 모두 사용이 가능합니다.
+
+타입 의존성이 낮아져 범용으로 사용이 가능한 코드로 변합니다. 공통된 코드를 형식이 다른 열거형, 구조체, 클래스, extension에서 사용할 수 있습니다. 
+
+```swift
+extension Int {
+    static let zero: Int = 0
+    
+    var zero: Int {
+        return 0
+    }
+    
+    func makeZero() -> Int {
+        return Int()
+    }
+}
+```
+
+위와 같은 확장 코드를 Double에서도 사용하기 위해서는 extension Double을 정의해주어야 합니다. 그리고 extension Int 내의 코드를 복사하여 붙여넣기 한 뒤, Int 타입으로 선언된 속성들의 타입을 모두 Double로 수정해야합니다. 타입에 의존하는 코드입니다. 이 때, 코드 안의 타입을 Self로 선언할 경우 타입 의존성이 낮아집니다.
+
+```swift
+extension Int {
+    static let zero: Self = 0
+    
+    var zero: Self {
+        return 0
+    }
+    
+    func makeZero() -> Self {
+        return Int()
+    }
+}
+```
+
+위 코드 중 블록 내의 코드는 이제 어디에 갖다 붙여넣기를 해도 해당 열거형, 구조체, 클래스, extension 등에서 해당 타입으로 정상 작동합니다. 
+
+프로토콜 선언 내에서도 실제 타입 대신 사용하면, 프로토콜을 구현하는 실제 타입으로 추론됩니다. 
+
+# 7. Property Wrapper #1
+
+주로 속성은 strored property로 선언하지만 속성을 저장하는 방식을 직접 구현하거나 리턴하는 타입을 제어하고싶다면 computed property로 선언합니다. 
+
+computed property는 값을 읽어오는 get block과 값을 저장하는 set block으로 구성되어 있으며 get block과 set block에서 코드는 보통 비슷한 패턴을 반복합니다. 
+
+`property wrapper`는 속성에 접근하는 코드를 별도의 타입으로 분리하고 여러곳에서 `재사용`할 수 있도록 도와줍니다. 오타율도 줄어들고 코드가 간결해져 유지와 보수에도 용이합니다. 
+
+이 부분은 추후 이해가 가면 추가로 덧붙이도록 하겠습니다.
+
+ㅠ_ㅠ
