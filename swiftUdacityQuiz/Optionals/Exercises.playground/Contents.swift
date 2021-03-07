@@ -10,11 +10,18 @@ var moviesDict:Dictionary = [ "Star Wars":"George Lucas", "Point Break":"Kathryn
 var movie = "Point Break"
 var director = moviesDict[movie]
 
+if let director = moviesDict[movie] {
+    print("\(director)")
+} else {
+    print("No director found")
+}
+
 //: 1b) Test your code by inserting different values for the variable `movie`.
 
 //: ### Exercise 2
 //: The LoginViewController class below needs a UITextField to hold a user's name. Declare a variable for this text field as a property of the class LoginViewController. Keep in mind that the textfield property will not be initialized until after the view controller is constructed.
 class LoginViewController: UIViewController {
+    var nameTextField: UITextField!
 }
 
 //: ### Exercise 3
@@ -23,18 +30,29 @@ class LoginViewController: UIViewController {
 //: 3a) Finish the code below by safely unwrapping the constant, `number`.
 var numericalString = "3"
 var number = Int(numericalString)
-//TODO: Unwrap number to make the following print statement more readable.
-print("\(number) is the magic number.")
+if let num = number {
+    print("\(num) is the magic number.")
+} else {
+    print("no magic numbers")
+}
 //: 3b) Change the value of numericalString to "three" and execute the playground again.
+numericalString = "three"
+number = Int(numericalString)
+if let num = number {
+    print("\(num) is the magic number")
+} else {
+    print("no magic numbers")
+}
+
 
 //: ### Exercise 4
 //: The class UIViewController has a property called tabBarController.  The tabBarController property is an optional of type UITabBarController?. The tabBarController itself holds a tabBar as a property. Complete the code below by filling in the appropriate use of optional chaining to access the tab bar property.
 var viewController = UIViewController()
-//if let tabBar = //TODO: Optional chaining here {
-//    print("Here's the tab bar.")
-//} else {
-//    print("No tab bar controller found.")
-//}
+if let tabBar = viewController.tabBarController?.tabBar {
+    print("Here's the tab bar.")
+} else {
+    print("No tab bar controller found.")
+}
 //: ### Exercise 5
 //: Below is a dictionary of paintings and artists.
 //:
@@ -44,6 +62,11 @@ var paintingDict:Dictionary = [ "Guernica":"Picasso", "Mona Lisa": "da Vinci", "
 var painting = "Mona Lisa"
 var artist = paintingDict[painting]
 
+if let artist = paintingDict[painting] {
+    print("\(artist)")
+} else {
+    print("no artist")
+}
 //: 5b) Test your code by inserting different values for the variable `painting`.
 
 //: ### Exercise 6
@@ -51,8 +74,15 @@ var artist = paintingDict[painting]
 var anotherViewController = UIViewController()
 var cancelButton: UIBarButtonItem!
 cancelButton = UIBarButtonItem()
-// TODO: Set the width of the cancel button.
+
+cancelButton.width = 50
+
 //: ### Exercise 7
 //: The class UIViewController has a property called parent.  The parent property is an optional of type UIViewController?. We can't always be sure that a given view controller has a parent view controller.  Safely unwrap the parent property below using if let.
 var childViewController = UIViewController()
-// TODO: Safely unwrap childViewController.parent
+
+if let parent = childViewController.parent {
+    print("parent view controller")
+} else {
+    print("view controller")
+}
