@@ -28,18 +28,18 @@ let shoutString =  "HEY! DID YOU KNOW THAT THE SWIFT STRING CLASS COMES WITH LOT
 let howManyCharacters = "How much wood could a woodchuck chuck if a woodchuck could chuck wood?"
 
 //Solution
-let thisMany = howManyCharacters.characters.count
+//let thisMany = howManyCharacters.characters.count
 //: ### Exercise 4
 //: How many times does the letter "g" or "G" appear in the following string? Use a for-in loop to find out!
 let gString = "Gary's giraffe gobbled gooseberries greedily"
 var count = 0
 
 // Solution
-for character in gString.characters {
-    if character == "g" || character == "G" {
-        count += 1
-    }
-}
+//for character in gString.characters {
+//    if character == "g" || character == "G" {
+//        count += 1
+//    }
+//}
 //: ### Exercise 5
 //: Write a program that tells you whether or not this string contains the substring "tuna".
 let word = "fortunate"
@@ -143,7 +143,7 @@ var balance: Double
 // Solution
  let stringToReverse = "Mutable or Immutable? That is the question."
  var reversedString = ""
- for character in stringToReverse.characters {
+ for character in stringToReverse {
      reversedString = "\(character)" + reversedString
  }
 print(reversedString, terminator: "")

@@ -10,7 +10,7 @@ let index1 = Int(arc4random() % 9)
 let index2 = Int(arc4random() % 9)
 
 let sentence = "The \(nounArray[6]) spilled her \(nounArray[7])."
-let  sillySentence = "The \(nounArray[index1]) jumped over the \(nounArray[index2])."
+let sillySentence = "The \(nounArray[index1]) jumped over the \(nounArray[index2])."
 //: Now try it yourself! Declare a new string that incorporates objects from the noun array above. Write one sentence that makes sense and one "Madlib" sentence with randomly chosen words. Feel free to add words to the noun array or declare a new array.
 let yourSentence = "TODO: Incorporate objects from the noun array here."
 let yourSillySentence = "TODO: Incorporate randomly chosen objects from the noun array here."
@@ -18,20 +18,39 @@ let yourSillySentence = "TODO: Incorporate randomly chosen objects from the noun
 //: Recreate the shoutString by using the didYouKnowString as a stem.
 let didYouKnowString = "Did you know that the Swift String class comes with lots of useful methods?"
 let whisperString = "psst" + ", " + didYouKnowString.lowercased()
-let shoutString =  "HEY! DID YOU KNOW THAT THE SWIFT STRING CLASS COMES WITH LOTS OF USEFUL METHODS?"
+let shoutString =  "HEY! " + didYouKnowString.uppercased()
+
+
 //: ### Exercise 3
 //: How many characters are in this string? 
 let howManyCharacters = "How much wood could a woodchuck chuck if a woodchuck could chuck wood?"
+
+var countChar = 0
+for _ in howManyCharacters {
+    countChar += 1
+}
+
+let howManyChars = howManyCharacters.count
 //: ### Exercise 4
 //: How many times does the letter "g" or "G" appear in the following string? Use a for-in loop to find out!
 let gString = "Gary's giraffe gobbled gooseberries greedily"
 var count = 0
+
+for idx in gString {
+    if idx == "g" || idx == "G" { count += 1 }
+}
+
 //: ### Exercise 5
 //: Write a program that tells you whether or not this string contains the substring "tuna".
 let word = "fortunate"
+if word.contains("tuna") == true {
+    print("yes")
+}
 //: ### Exercise 6
 //: Write a program that deletes all occurrences of the word "like" in the following string.
 let lottaLikes = "If like, you wanna learn Swift, like, you should build lots of small apps, cuz it's like, a good way to practice."
+
+let deleteLike = lottaLikes.replacingOccurrences(of: "like", with: "")
 //: ### Exercise 7
 // Example
 let sillyMonkeyString = "A monkey stole my iPhone"
@@ -41,25 +60,35 @@ let newerString = newString.replacingOccurrences(of: "iPhone", with: "📱")
 //: You can start off with this dictionary and string.
 let dictionary = ["monkey": "🐒", "iPhone":"📱"]
 var newestString = sillyMonkeyString
+
+for (key, value) in dictionary {
+    newestString = newString.replacingOccurrences(of: key, with: value)
+}
+print(newestString)
 //: ### Exercise 8
 //: Josie has been saving her pennies and has them all counted up. Write a program that, given a number of pennies, prints out how much money Josie has in dollars and cents.
 // Example
 let numOfPennies = 567
+
+let dollarInt = numOfPennies/100
+let dollarString: String = "$\(dollarInt)."
+let centsString: String = "\(numOfPennies%100)"
+let finalString: String = dollarString + centsString
 //desired output = "$5.67"
 //: # Let or Var?
 import UIKit
 import Foundation
 //: ### Exercise 9
 //: Below is the code to find all the numbers present in an array, convert them to Ints, and calculate their sum. Have a look at the entities declared below: array, sum, and intToAdd. Think about whether each should be a constant or a variable and choose whether to declare them with let or var. When you're finished uncomment the code and see if the compiler agrees with your choices!
-// let or var array = ["A", "13", "B","5","87", "t", "41"] // TODO: Choose constant or variable
-// let or var sum = 0 // TODO: Choose constant or variable
-// for string in array {
-//     if Int(string) != nil {
-//         let or var intToAdd = Int(string)! // TODO: Choose constant or variable
-//         sum += intToAdd
-//     }
-// }
-// print(sum)
+ let array = ["A", "13", "B","5","87", "t", "41"] // TODO: Choose constant or variable
+ var sum = 0 // TODO: Choose constant or variable
+ for string in array {
+     if Int(string) != nil {
+         let intToAdd = Int(string)!
+         sum += intToAdd
+     }
+ }
+ print(sum)
 //: ### Exercise 10
 //: For each of the following pairs, choose whether to declare a constant or a variable.
 //:
@@ -69,16 +98,22 @@ import Foundation
 let summitElevation: Int
 var currentElevation: Int
 //: 10a) Imagine you are writing a quiz app, and you need to program a timer that will stop a quiz after 20 min. Declare four entities: startTime, currentTime, maximumTimeAllowed, and timeRemaining. Don't worry about encoding their values.
+let startTime: Date
+var currentTime: Date
+let maximumTimeAllowed: Double
+var timeRemaining: Double
 
+let creditLimit: Double
+var balancd: Double
 //: 10b) Imagine you are writing an app for a credit card company. Declare two entities: creditLimit and balance.
 //: ### Exercise 11
 //: Below is the code to reverse a string. Have a look at the entities declared: stringToReverse and reversedString. Choose whether to declare each with let or var. When you're finished uncomment the code and see if the compiler agrees with your choices!
-//let or var stringToReverse = "Mutable or Immutable? That is the question." //TODO:Choose let or var
-//let or var reversedString = "" //TODO:Choose let or var
-//for character in stringToReverse.characters {
-//    reversedString = "\(character)" + reversedString
-//}
-//print(reversedString, terminator: "")
+let stringToReverse = "Mutable or Immutable? That is the question."
+var reversedString = ""
+for character in stringToReverse {
+    reversedString = "\(character)" + reversedString
+}
+print(reversedString, terminator: "")
 
 
 
