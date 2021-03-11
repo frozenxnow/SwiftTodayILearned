@@ -847,6 +847,69 @@ comparable 프로토콜은 Equatable 프로토콜을 채용하고 있고, 네 �
 
 ## 2) Struct
 
+앞서 살펴보았던 Equatable protocol, Hashable protocol과 같이 정의합니다. 
+
+- 도전과제 : 아래에 hashable을 구현해보시오.
+
+```swift
+struct Person {
+    let name: String
+    let age: Int
+}
+
+extension Person: Comparable {
+    static func < (lhs: Person, rhs: Person) -> Bool {
+        return lhs.name < rhs.name
+    }
+}
+
+let a = Person(name: "Paul", age: 12)
+let b = Person(name: "Smith", age: 33)
+
+a < b
+```
+
 ## 3) Class
 
-앞서 살펴보았던 Equatable protocol, Hashable protocol과 같이 정의합니다.
+앞서 살펴보았던 Equatable protocol, Hashable protocol과 같이 정의합니다. 
+
+- 도전과제 : 아래에 hashable을 구현해보시오.
+
+```swift
+enum MembershipGrade: Int {
+    case normal
+    case premium
+    case vip
+    case vvip
+}
+
+class Membership {
+    let name: String
+    let grade: MembershipGrade
+    let point: Int
+    
+    init(name: String, grade: MembershipGrade, point: Int) {
+        self.name = name
+        self.grade = grade
+        self.point = point
+    }
+}
+
+extension Membership: Comparable {
+    static func < (lhs: Membership, rhs: Membership) -> Bool {
+        return lhs.grade.rawValue < rhs.grade.rawValue
+    }
+    
+    static func == (lhs: Membership, rhs: Membership) -> Bool {
+        return lhs.grade == rhs.grade
+    }
+    
+}
+
+let c = Membership(name: "James", grade: .premium, point: 123)
+let d = Membership(name: "Yuna", grade: .vvip, point: 2020)
+let e = Membership(name: "Paul", grade: .normal, point: 37)
+
+ c < d
+ d > e
+```
