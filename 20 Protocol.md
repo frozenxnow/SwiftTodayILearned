@@ -550,4 +550,303 @@ cr = Oval()
 
 Circle클래스 계층에 있고 Resettable 프로토콜을 채용한 인스턴스를 cr 변수에 저장했습니다.
 
-Oval 클래스는 Circle 클래스를 상속받습니다. 그리고 상속받은 Circle클래스 덕분에 Resettable 요구사항도 충족하고 있기 때문에 Oval 인스턴스는 cr에 저장이 가능합니다.
+Oval 클래스는 Circle 클래스를 상속받습니다. 그리고 상속받은 Circle클래스 덕분에 Resettable 요구사항도 충족하고 있기 때문에 Oval 인스턴스는 cr에 저장이 가능합니다. 
+
+# 8. Optional Requirements
+
+선택적 요구사항입니다. 이전에 배웠던 nil 값을 저장할 수 있는 옵셔널 타입이 아닌 단어 자체의 의미로 사용합니다. 
+
+클래스에서만 사용이 가능하며, 열거형과 구조체에서는 이 프로토콜을 채용할 수 없습니다. AnyObject 프로토콜을 상속하면 클래스에서만 사용이 가능합니다. @objc attribute를 추가하면 AnyObject 프로토콜이 자동으로 상속됩니다. 
+
+이를 사용하기 위해서는 `@objc attribute`와 `optional modifier`를 사용합니다.
+
+```swift
+@objc protocol protocolName {
+		@objc optional requirements
+}
+```
+
+옵셔널 프로토콜과 그 프로토콜을 채용하는 클래스를 살펴보겠습니다.
+
+```swift
+@objc protocol Drawable {
+    @objc optional var strokeWidth: Double { get set }
+    func draw()
+    @objc optional func reset()
+}
+
+class Rectangle: Drawable {
+    func draw() {
+        
+    }
+}
+
+let r: Drawable = Rectangle()
+r.draw()
+r.strokeWidth // nil 
+r.reset?()
+```
+
+Drawable 형식의 Rectangle 인스턴스를 생성했습니다. 일반 속성인 draw() 메서드에는 바로 접근할 수 있지만 옵셔널 멤버에 접근하기 위해서는 옵셔널 체이닝이 필요합니다. 
+
+옵셔널 속성인r.strockWidth에서 `nil`은 아무 값도 저장되어 있지 않다는 의미와 형식에 해당 속성이 선언되어 있지 않다는 의미입니다. 
+
+옵셔널 타입과 마찬가지로 옵셔널로 선언된 메서드를 호출하기 위해서는 옵셔널 체이닝 연산자인 `?`가 필요합니다. 선택적 메서드는 선택적 속성과 같이 옵셔널로 대체됩니다. 
+
+# 9. Protocol Extension
+
+프로토콜의 확장입니다. 프로토콜을 확장하여 프로토콜에 요구되는 속성과 메서드를 정의할 수 있습니다. `구현된 상태의 프로토콜 속성`이라고 이해하면 될 것 같습니다. 
+
+```swift
+protocol Figure {
+    var name: String { get }
+    func draw()
+}
+
+extension Figure {
+    func draw() {
+        print("draw something")
+    }
+}
+
+struct Rectangle: Figure {
+    var name = "Rect"
+}
+
+let r = Rectangle()
+r.name
+r.draw() // draw something
+```
+
+extension에서 프로토콜을 확장하고, 그 프로토콜을 채용한 구조체가 있습니다. 
+
+여기에 Rectangle에서 draw() 메서드를 다시 선언한 후 r.draw()를 호출하면, Rectangle 구조체에서 직접 구현한 함수가 출력됩니다.
+
+```swift
+struct Rectangle: Figure {
+    var name = "Rect"
+		func draw() {
+				print("Draw Rectangle")
+		}
+}
+r.draw() // Draw Rectangle
+```
+
+확장된 프로토콜보다 직접 구현한 쪽의 우선순위가 더 높습니다. 
+
+# 10. Equatable (==, !=)
+
+스위프트가 제공하는 기본 프로토콜 중 가장 중요한 프로토콜입니다.
+
+## 1) Enum
+
+- 연관값이 없는 열거형 : 자동으로 equatable 프로토콜을 추가합니다.
+
+    ```swift
+    enum Case {
+        case case1
+        case case2
+    }
+
+    Case.case1 == Case.case2 // false. 따로 Equatable을 구현하지 않아도 값을 비교할 수 있습니다.
+    ```
+
+- 기본(혹은 Equatable을 채용한) 타입을 연관값으로 가지고 있는 열거형  : 자동으로 equatable 프로토콜을 제공합니다. 단, 연관값을 가지고 있는 경우에는 열거형이 Equatable 프로토콜을 채용하도록 구현해야합니다.
+
+    ```swift
+    enum VideoInterface: **Equatable** {
+        case dvi(width: Int, height: Int)
+        case hdmi(width: Int, height: Int, version: Double, audoiEnabled: Bool)
+        case displayPort(size: CGSize)
+    }
+
+    let a = VideoInterface.hdmi(width: 2560, height: 1440, version: 2.0, audoiEnabled: true)
+    let b = VideoInterface.displayPort(size: CGSize(width: 3840, height: 2160))
+
+    a == b // true. 비교 가능합니다.
+    ```
+
+- Equatable을 채용하지 않은 타입을 연관값으로 가지고 있는 열거형 : Equatable을 직접 구현해야합니다.
+
+    클래스에서 구현하는 방법과 같기 때문에 생략하겠습니다.
+
+## 2) Structure
+
+구조체가 Equatable을 채용하도록 작성하면 컴파일러가 알아서 필요한 Equatable을 구현합니다. 
+
+여기에서도 마찬가지로 속성은 기본(혹은 Equatable을 채용한) 타입이어야 합니다. 
+
+```swift
+struct Person : Equatable {
+    let name: String
+    let age: Int
+}
+
+let a = Person(name: "Steve", age: 12)
+let b = Person(name: "Paul", age: 27)
+a == b // true. 비교 가능합니다.
+```
+
+## 3) Class
+
+클래스에서 Equatable 프로토콜을 채용할 경우 equatable 프로토콜에 선언되어 있는 타입메서드를 직접 구현해야합니다. 보통 클래스에서 직접 구현하지 않고, extension에서 구현합니다. (가독성이 높아지고 유지와 보수가 용이해집니다.) 이 방법은 열거형과 구조체에서도 사용 가능합니다. 
+
+```swift
+class Person {
+    let name: String
+    let age: Int
+    
+    init(name: String, age: Int) {
+        self.name = name
+        self.age = age
+    }
+}
+
+extension Person: Equatable { // Extension에서 함수를 정의합니다.
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.name == rhs.name && lhs.age == lhs.age
+    }
+}
+
+let a = Person(name: "Steve", age: 12)
+let b = Person(name: "Paul", age: 27)
+
+a == b
+```
+
+주의해야할 점은 속성의 모든 형식이 기본타입이어야 한다는 점입니다. 
+
+또한 equatable을 구현할 때 모든 속성을 비교할 수 있도록 해야합니다. 이렇게 프로토콜을 작성한 후 세 가지 조건을 검증해야합니다.
+
+1. a == a // 늘 true여야 합니다.
+2. a == b, b == a // 두 결과값은 일치해야합니다. 
+3. a == b, b == c, c == a // 앞의 두 결과가 true라면 마지막 c == a 의 결과도 true여야 합니다. 
+
+# 11. Hashable
+
+특정 조건을 만족하면 자동으로 제공됩니다. 단방향 암호화에 사용되는 기법이고 주로 무결성을 체크하거나 사용자 인증에 사용합니다. swift에서는 주로 dictionary의 key나 Set으로 정의합니다.
+
+1) 값의 유일성을 보장하고, 2) 검색 속도가 빠르다는 장점이 있습니다.
+
+## 1) enum
+
+- 연관값이 없는 열거형의 경우 : hashable을 자동으로 제공하고 hashable에 대한 선언도 생략할 수 있습니다.
+
+    ```swift
+    enum ServiceType {
+        case onlineCourse
+        case offlineCamp
+    }
+
+    let types: [ServiceType: String] // dict 선언
+    let typeSet: Set = [ServiceType.onlineCourse] // Set 선언
+    ```
+
+- 기본(혹은 hashable을 채용한) 타입을 연관값으로 가지고 있는 열거형  : 자동으로 hashable 프로토콜을 제공합니다. 단, 연관값을 가지고 있는 경우에는 열거형이 hashable 프로토콜을 채용하도록 구현해야합니다.
+
+    ```swift
+    enum VideoInterface: Hashable {
+        case dvi(width: Int, height: Int)
+        case hdmi(width: Int, height: Int, version: Double, audoiEnabled: Bool)
+    }
+
+    let interfaces: [VideoInterface: String]
+    let interfaceSet: Set = [VideoInterface.dvi(width: 1024, height: 768)]
+    ```
+
+- hashable을 채용하지 않은 타입을 연관값으로 가지고 있는 열거형 : 모든 속성이 hashable을 채용하도록 직접 구현해야합니다.
+
+## 2) Struct
+
+구조체가 hashable을 채용하도록 작성하면 컴파일러가 알아서 필요한 hashable을 구현합니다. 
+
+여기에서도 마찬가지로 속성은 기본(혹은 hashable을 채용한) 타입이어야 합니다. 
+
+```swift
+struct Person: Hashable {
+    let name: String
+    let age: Int
+}
+
+let dict: [Person: String]
+let set: Set = [Person(name: "Tom", age: 12)]
+```
+
+## 3) Class
+
+클래스에서 hashable 프로토콜을 채용할 경우 hashable 프로토콜에 선언되어 있는 속성과 메서드를 직접 구현해야합니다. 그 중 속성인 hashValue는 더이상 사용되지 않는 속성이기 때문에 메서드(hash(into:)만 정의합니다. 보통 클래스에서 직접 구현하지 않고, extension에서 구현합니다. (가독성이 높아지고 유지와 보수가 용이해집니다.) 이 방법은 열거형과 구조체에서도 사용 가능합니다. 
+
+hashable을 살펴보면 equatable을 상속받고 있기 때문에 추가적인 구현이 필요합니다. 
+
+결론적으로 hashable의 hash(into:) 메서드와 equatable의 메서드를 구현해야합니다. 이것 또한 extension에서 구현해 가독성을 높이고 유지와 보수가 용이하도록 해야합니다. 
+
+```swift
+class Person {
+    let name: String
+    let age: Int
+    
+    init() {
+        name = "Jane Doe"
+        age = 0
+    }
+}
+
+extension Person: Hashable {
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.name == rhs.name && lhs.age == rhs.age
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(age)
+    } // combine을 이용해 모든 속성을 순서대로 전달해야합니다.
+        // 컴바인으로 전달되는 속성의 타입은 반드시 hashable을 구현해야합니다.
+}
+```
+
+hash(into:) 함수는 복잡하게 직접 구현할 필요 없이 파라미터로 전달받은 hasher를 사용하도록 구현되어 있습니다. 
+
+이 때 combine을 이용해 `모든` 속성을 `순서대로` 전달해야 하며, combine으로 전달되는 속성의 타입은 반드시 hashable을 구현해야 한다는 점을 유의해야합니다. 
+
+# 12. Comparable (<=, <, >=, >)
+
+Equatable은 동일한 값을 비교하는 프로토콜이었고, 
+
+Comparable은 값의 크기나 순서를 비교하는 프로토콜입니다.
+
+String이나 Int, Double을 포함한 숫자 타입은 Comparable을 기본으로 제공합니다. 
+
+## 1) Enum
+
+- 연관값이 없는 열거형의 경우 : Comparable 프로토콜을 채용하면 자동으로 구현됩니다. 
+이전 버전에서는 불가능했으나 Swift 5.3+ 부터는 가능하도록 변경되었습니다.
+- 기본(혹은 hashable을 채용한) 타입을 연관값으로 가지고 있는 열거형  : Comparable 프로토콜을 채용하면 자동으로 구현됩니다.
+- hashable을 채용하지 않은 타입을 연관값으로 가지고 있는 열거형 : 직접 구현해야 합니다.
+comparable 프로토콜은 Equatable 프로토콜을 채용하고 있고, 네 개의 비교 연산자가 선언되어 있습니다. 이 중 첫번째 연산자만 구현하면 나머지 세개의 연산자는 자동으로 구현됩니다.
+
+    ```swift
+    enum Weekday: Int { // rawValue를 갖도록 하고
+        case sunday
+        case monday
+        case tuesday
+        case wednesday
+        case thursday
+        case friday
+        case saturday
+    }
+
+    extension Weekday: Comparable { // extension에서 comparable을 채용합니다
+        static func < (lhs: Weekday, rhs: Weekday) -> Bool {
+            return lhs.rawValue < rhs.rawValue
+        }
+    }
+
+    Weekday.sunday < Weekday.monday // true. 
+    ```
+
+    만약 rawValue가 없다면 if문이나 switch문을 활용해 각 케이스를 비교하도록 구현합니다. equatable의 타입메서드도 구현해야 하지만 지금은 구현하지 않아도 됩니다. 
+
+## 2) Struct
+
+## 3) Class
+
+앞서 살펴보았던 Equatable protocol, Hashable protocol과 같이 정의합니다.
