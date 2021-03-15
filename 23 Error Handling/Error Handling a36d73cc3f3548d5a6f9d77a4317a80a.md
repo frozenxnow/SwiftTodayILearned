@@ -137,4 +137,51 @@ func handleError() {
 }
 ```
 
-패턴이 없는 catch 블럭에서는 `error`라는 특별한 로컬상수가 제공되며, 이 형식으로 에러를 전달합니다. 이것은 에러 프로토콜이기 때문에 타입캐스팅이 필요합니다. 주로 switch문을 사용해 위와 같이 사용합니다.
+패턴이 없는 catch 블럭에서는 `error`라는 특별한 로컬상수가 제공되며, 이 형식으로 에러를 전달합니다. 이것은 에러 프로토콜이기 때문에 타입캐스팅이 필요합니다. 주로 switch문을 사용해 위와 같이 사용합니다. 
+
+# 3. Multi-pattern Catch Clauses
+
+![Error%20Handling%20a36d73cc3f3548d5a6f9d77a4317a80a/_2021-03-15__10.37.17.png](Error%20Handling%20a36d73cc3f3548d5a6f9d77a4317a80a/_2021-03-15__10.37.17.png)
+
+do-catch문에서 catch블럭에 **두개 이상의 패턴을 동시에 매칭**하는 문법입니다.
+
+스위프트 5 이상부터 지원이 가능하며, 보기와 같이 콤마로 나열합니다. 이전에는 catch블럭에서 에러를 바인딩하여 switch문을 사용해야 했으나 개선된 모습입니다.
+
+# 4. Optional Try
+
+do block이 아닌 곳에서 에러를 발생하는 표현식을 사용할 때 `try?` , `try!`를 사용합니다.
+
+`try?` Optional Try : 표현식에서 에러가 전달된 경우 nil을 전달합니다.
+
+`try!` Forced Try : 표현식에러 에러가 전달된 경우 실행을 중지합니다. 런타임 에러가 발생합니다.
+
+옵셔널 형식이기 때문에 주로 옵셔널 바인딩과 함께 사용합니다. 
+
+```jsx
+if let _ = try? parsing(data: [:]) {
+    print("success")
+} else {
+    print("fail")
+}
+
+do {
+    try parsing(data: [:])
+    print("success")
+} catch {
+    print("fail")
+}
+```
+
+optional try를 사용하는 방법입니다. parsing(data: [:])의 결과를 바인딩 할 필요가 없으니 와일드카드에 바인딩한 모습입니다. 에러가 발생하지 않아 올바르게 바인딩 된다면 success를, 에러가 발생하면 fail을 출력하는 모습입니다. 
+
+이를 do-catch문으로 작성할 경우 아래와 같습니다.
+
+if block은 do block으로,
+
+else block은 catch block으로 대체 가능합니다. 
+
+반면 forced try를 사용하는 경우 에러가 발생하면 런타임 에러가 발생하고 프로그램이 강제로 종료됩니다.
+
+에러를 처리할 수도, 전달할 수도 없기 때문에 확실한 경우에만 제한적으로 사용하도록 합니다. 
+
+# 5. Defer Statements
