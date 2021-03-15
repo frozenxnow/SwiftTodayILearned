@@ -64,6 +64,10 @@ admitted.append(someone)
 someone = waitingList.remove(at: 0)
 admitted.append(someone)
 
+waitingList.remove(at: 0)
+waitingList.remove(at: 0)
+admitted.append(contentsOf: waitingList)
+
 
 
 //: ### Exercise 7
@@ -95,17 +99,25 @@ presidentialPetsDict["George H.W. Bush"] = "Millie"
 
 
 //desired output
-presidentialPetsDict = ["Barack Obama":"Bo", "George Bush": "Miss Beazley","Bill Clinton": "Socks", "George H. W. Bush": "Millie", "Ronald Reagan": "Lucky"]
+//presidentialPetsDict = ["Barack Obama":"Bo", "George Bush": "Miss Beazley","Bill Clinton": "Socks", "George H. W. Bush": "Millie", "Ronald Reagan": "Lucky"]
+
+
 //: ### Exercise 10
 //: Remove the entry for "George Bush" and replace it with an entry for "George W. Bush".
 var oldValue = presidentialPetsDict.removeValue(forKey: "George H. W. Bush")
 presidentialPetsDict["George W. Bush"] = oldValue
 
+
+presidentialPetsDict["George W. Bush"] = presidentialPetsDict["George Bush"]
+
+presidentialPetsDict.removeValue(forKey: "George Bush")
+
+presidentialPetsDict
 //: ### Exercise 11
 //: We've initialized a new dictionary of presidentialDogs with the entries from presidentialPets. Update the entry for Bill Clinton by replacing "Socks" the cat with "Buddy" the dog.
 var presidentialDogs = presidentialPetsDict
-
-presidentialPetsDict["Bill Clinton"] = "Buddy"
+presidentialDogs["Bill Clinton"] = "Buddy"
+presidentialDogs
 
 
 
