@@ -58,7 +58,7 @@ let dirtyWordsArray = ["phooey", "darn", "drat", "blurgh", "jupiters", "argh", "
 func cleanUp(_ dirtyArray: [String]) -> [String] {
     var cleanArray = [String]()
     for word in dirtyArray {
-        if word.characters.count == 4 {
+        if word.count == 4 {
         } else {
             cleanArray.append(word)
         }
