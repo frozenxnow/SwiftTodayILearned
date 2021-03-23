@@ -36,16 +36,16 @@ print(combineLastCharacters(arr: nonsenseArray))
 
 //: __3b.__ Write a for-in loop that checks each character of a string to see if it is a member of the "digits" set. Use the .unicodeScalars property to access all the characters in a string. Hint: the method longCharacterIsMember may come in handy.
 
-let digits = CharacterSet.decimalDigits
+let digits = CharacterSet.decimalDigits // 10진법
 
-//func digitsOnly(input: String) -> Bool {
-//    for char in input.unicodeScalars {
-//        if digits.contains(UnicodeScalar(char.value)!) {
-//            return false
-//        }
-//    }
-//    return true
-//}
+func digitsOnly(input: String) -> Bool {
+    for char in input.unicodeScalars {
+        if digits.contains(UnicodeScalar(char.value)!) {
+            return false
+        }
+    }
+    return true
+}
 
 
 // ****************** 아래 방법으로 decimalDigitCharacterSet() 사용해보고싶은데 잘 안됨 ******************
