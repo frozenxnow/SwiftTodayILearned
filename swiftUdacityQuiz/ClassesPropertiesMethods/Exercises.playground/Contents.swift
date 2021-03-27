@@ -8,11 +8,6 @@ import UIKit
 //: The compiler is complaining because the class Animal has no initializers. Write an init method for the Animal class and quiet this error. Include a mechanism to initialize the length of the Animal's tail using the Tail struct provided.
 struct Tail {
     let lengthInCm: Double
-    
-    // memberwise initializer
-    init(length: Double) {
-        self.lengthInCm = length
-    }
 }
 
 class Animal {
@@ -21,36 +16,34 @@ class Animal {
     
     init(species: String, length: Double) {
         self.species = species
-        self.tail = Tail(length: length)
+        self.tail = Tail(lengthInCm: length)
     }
-    
 }
 //: __1b.__
 //: Instantiate and initialize a few different Animals.
-var ant = Animal(species: "Ant", length: 2.0)
-var dog = Animal(species: "Dog", length: 50.0)
+let ant = Animal(species: "ant", length: 2.0)
+let dog = Animal(species: "dog", length: 30.0)
 //: __Problem 2__
 //:
 //: Below are the beginnings of the Peach class.
 class Peach {
-    let variety: String
-    
+    var varieties: String
     // Softness is rated on a scale from 1 to 5, with 5 being the softest
     var softness: Int
     
-    static var varieties = ["A", "B", "C"] // type property
+    static var varieties: [String] = ["a", "b", "c"]
     
-    init(variety: String, softness: Int) {
-        self.variety = variety
+    init(varieties: String, softness: Int) {
+        self.varieties = varieties
         self.softness = softness
     }
     
     func ripen() {
-        self.softness += 1 // 그냥 softness += 1 도 가능!
-        if softness > 4 {
-            print("eat me")
+        self.softness += 1
+        if self.softness > 4 {
+            print("Softness is \(softness)")
         } else {
-            print("just second")
+            print("X")
         }
     }
     
@@ -63,13 +56,13 @@ class Peach {
 //:
 //: __2c.__
 //: Create an instance of the Peach class and call the method ripen().
-let peach = Peach(variety: "A", softness: 4)
+let peach = Peach(varieties: "peach", softness: 5)
 peach.ripen()
 //: __Problem 3__
 //:
 //: __3a.__
 //:Add the computed property, "cuddlability", to the class, FluffyDog. Cuddlability should be computed based on the values of the stored properties, fluffiness and droolFactor.
-var theFluffiestDog = UIImage(named:"fluffyDog") // nil이라서 함수가 실행되지 않음
+var theFluffiestDog = UIImage(named:"fluffyDog")
 class FluffyDog {
     let name: String
     let fluffiness: Int
@@ -78,7 +71,7 @@ class FluffyDog {
     // Solution : 3a
     var cuddlability: Int {
         get {
-            return self.fluffiness - self.droolFactor
+            return fluffiness + droolFactor
         }
     }
     
@@ -94,9 +87,9 @@ class FluffyDog {
 }
 //: __3b.__
 //: Instantiate and initialize an instance of the class, FluffyDog. Use it to call the method, chase().
-var somePuppy = FluffyDog(name: "puppy", fluffiness: 40, droolFactor: 30)
+var somePuppy = FluffyDog(name: "Dog", fluffiness: 20, droolFactor: 30)
 somePuppy.cuddlability
-somePuppy.chase("something")
+somePuppy.chase("car")
 
 //: __Problem 4__
 //:
@@ -119,36 +112,36 @@ class ChattyDog {
         self.size = size
     }
     
-    func bark(_ size: Size) -> String {
+    func bark() -> String {
         switch size {
         case .small:
-            return "small small"
+            return "small bark"
         case .medium:
-            return "medium medium"
+            return "medium bark"
         case .large:
-            return "large large"
+            return "large bark"
         }
     }
     
-    static func speak(_ size: Size) -> String {
+    static func speak(size: Size) -> String {
         switch size {
         case .small:
-            return "small small"
+            return "small bark"
         case .medium:
-            return "medium medium"
+            return "medium bark"
         case .large:
-            return "large large"
+            return "large bark"
         }
     }
 }
 //: __4b.__
 //: Create an instance of ChattyDog and use it to call the method, bark().
 var someDog = ChattyDog(name: "Bow", breed: "someDog", size: .large)
-someDog.bark(someDog.size) // 함수 선언시 wildcard가 반드시 있어야한다
-ChattyDog.speak(someDog.size)
+someDog.bark()
+
 //: __4c.__
 //: Rewrite the method, bark(), as a type method and rename it speak(). Call your type method to test it out.
-
+ChattyDog.speak(size: .large)
 //: __Problem 5__
 //:
 //:__5a.__
@@ -167,6 +160,11 @@ class House {
     var numberOfBedrooms: Int = 0
     let location: Quality
  
+    init(numberOfBedrooms: Int, location: Quality) {
+        self.numberOfBedrooms = numberOfBedrooms
+        self.location = location
+    }
+    
     func willStayStanding(_ naturalDisaster:NaturalDisaster)-> Bool {
         switch naturalDisaster {
         case .earthquake:
@@ -178,19 +176,12 @@ class House {
         }
     }
     
-    init(location: Quality, number: Int) {
-        self.location = location
-        self.numberOfBedrooms = number
-    }
-    
     var worthyOfAnOffer: Bool {
-        get {
-            switch (location, numberOfBedrooms) {
-            case (.excellent, 3):
-                return true
-            default:
-                return false
-            }
+        switch (numberOfBedrooms, location) {
+        case (3, .excellent):
+            return true
+        default:
+            return false
         }
     }
     
@@ -198,9 +189,8 @@ class House {
 
 //: __5b.__
 //: Create an instance of the House class and use it to call the method, willStayStanding().  This method takes in a parameter of type NaturalDisaster and return a Bool indicating whether the house will stay standing in a given natural disaster.
-var someHouse = House(location: .excellent, number: 3)
-someHouse.willStayStanding(.hurricane)
-someHouse.worthyOfAnOffer
+let someHouse = House(numberOfBedrooms: 3, location: .poor)
+someHouse.willStayStanding(.earthquake)
 //: __5c.__
 //: Add a computed property called, "worthyOfAnOffer". This property should be a Bool, whose return value is dependent upon some combination of the stored properties, numberOfBedrooms and location.
 
