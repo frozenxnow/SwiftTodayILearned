@@ -46,7 +46,6 @@ class Peach {
             print("X")
         }
     }
-    
 }
 //: __2a.__
 //: Add a type property to the Peach class called "varieties". It should hold an array of different types of peaches.
@@ -58,6 +57,7 @@ class Peach {
 //: Create an instance of the Peach class and call the method ripen().
 let peach = Peach(varieties: "peach", softness: 5)
 peach.ripen()
+Peach.varieties
 //: __Problem 3__
 //:
 //: __3a.__
@@ -81,7 +81,7 @@ class FluffyDog {
         self.droolFactor = droolFactor
     }
 
-    func chase(_ wheeledVehicle: String)-> String {
+    func chase(_ wheeledVehicle: String) -> String {
         return "Where are you going, \(wheeledVehicle)? Wait for me! No, don't go! I will catch you!"
     }
 }
@@ -136,8 +136,9 @@ class ChattyDog {
 }
 //: __4b.__
 //: Create an instance of ChattyDog and use it to call the method, bark().
-var someDog = ChattyDog(name: "Bow", breed: "someDog", size: .large)
+var someDog = ChattyDog(name: "Bow", breed: "someDog", size: .medium)
 someDog.bark()
+ChattyDog.speak(size: .large)
 
 //: __4c.__
 //: Rewrite the method, bark(), as a type method and rename it speak(). Call your type method to test it out.
@@ -184,9 +185,7 @@ class House {
             return false
         }
     }
-    
 }
-
 //: __5b.__
 //: Create an instance of the House class and use it to call the method, willStayStanding().  This method takes in a parameter of type NaturalDisaster and return a Bool indicating whether the house will stay standing in a given natural disaster.
 let someHouse = House(numberOfBedrooms: 3, location: .poor)
