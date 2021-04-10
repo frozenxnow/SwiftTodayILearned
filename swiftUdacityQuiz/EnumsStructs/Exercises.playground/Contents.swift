@@ -33,7 +33,6 @@ espressoForGabrielle.steamedMilk = .splash
 macchiato.steamedMilk
 
 
-
 //: __Problem 2__
 //:
 //: __2a.__

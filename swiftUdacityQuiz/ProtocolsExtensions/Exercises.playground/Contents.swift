@@ -19,7 +19,33 @@ enum Level {
     case high
 }
 
-class Teenager {
+// 1a
+class Teenager: Babysitter {
+    
+    // 1b
+    
+    func playCandyland(_ numberOfTimes: Int) {
+        var cnt = 0;
+        while cnt < numberOfTimes {
+            print("We made it to the Candyland!")
+            cnt += 1
+        }
+    }
+    
+    func read(_ book: String, firstLine: String, asleep: Bool) -> Bool {
+        print("Of course, we can read \(book) again. \(firstLine)...")
+        if asleep {
+            print("It's true")
+            return true
+        } else {
+            print("It's false")
+            return false
+        }
+    }
+    
+    // 1b
+    
+    
     var age: Int
     let responsible: Bool
     let patience: Level
@@ -36,6 +62,10 @@ protocol Babysitter {
     func read(_ book: String, firstLine: String, asleep: Bool) -> Bool
 }
 
+// 1c
+let someone = Teenager(age: 15, responsible: true, patience: .medium)
+someone.playCandyland(5)
+someone.read("HELLO", firstLine: "Hello this is..", asleep: false)
 
 //: __Problem 2__
 //:
@@ -59,7 +89,23 @@ protocol Adorable {
 
 var cuteMouse = UIImage(named: "mouseBall")
 
-class Animal { 
+// 1b
+class Animal: Adorable {
+    
+    // 2b
+    var size: Size = Size.tiny
+    
+    var softFur: Bool = true
+    
+    func frolick() {
+        print("Watch me jump around in this pile of leaves!")
+    }
+    
+    func curlIntoSmallBall() {
+        print("Who knew nuzzling your own booty was so charming?")
+    }
+    // 2b
+    
     let species: String
     let numberOfLegs: Int
     
@@ -67,8 +113,20 @@ class Animal {
         self.species = species
         self.numberOfLegs = numberOfLegs
     }
+    
+    init(species: String, numberOfLegs: Int, size: Size, softFur: Bool) {
+        self.species = species
+        self.numberOfLegs = numberOfLegs
+        self.size = size
+        self.softFur = softFur
+    }
 }
 var pic = UIImage(named: "frolick.jpg")
+
+// 2c
+let anyAnimal = Animal(species: "Dog", numberOfLegs: 4)
+anyAnimal.frolick()
+anyAnimal.curlIntoSmallBall()
 
 //: __Problem 3__
 //:
@@ -111,6 +169,18 @@ class Friend {
     }
 }
 
+// 3a, 3b
+protocol Mover {
+    // var reliability: Int { get set }
+    // var lickesYou: Bool { get set }
+    var willWorkForPizzaAndBeer: Bool { get set }
+    
+    // func goHiking() -> String
+    // func comeOverForDinner() -> String
+    func carryCouch() -> String
+    func loadVan(_ empty: Bool) -> Bool
+}
+
 //: Problem 4
 //:
 //: Below you can see that the Squirrel class conforms to the Hoarder protocol.
@@ -147,7 +217,7 @@ class Squirrel: Hoarder {
     
 }
 
-class ScrubJay {
+class ScrubJay: Hoarder {
     let wings = 2
     let female: Bool
     
@@ -158,6 +228,15 @@ class ScrubJay {
     func fly() -> String {
         return "Swoop!"
     }
+    
+    func cache(_ foodItem: String) -> String {
+        return "I won't forget about you little \(foodItem)s."
+    }
+    
+    func pilfer() -> String {
+        return "He he he. More for me!"
+    }
+    
 }
 
 //: __Problem 5__
@@ -204,6 +283,15 @@ class Minion {
     }
 }
 
+extension Minion: DirtyDeeds {
+    func cheat() {
+        print("Mwa ha ha!")
+    }
+    
+    func steal() {
+        print("Mwa ha ha!")
+    }
+}
 //: __Problem 6__
 //:
 //: This extension from the [Coding Explorer Blog](http://www.codingexplorer.com/swift-extensions/) makes it easier to initialize a UIColor object from RGB values that are integers.
@@ -213,17 +301,21 @@ class Minion {
 //:
 //: __6b.__
 //: Demonstrate how you would call the pistachio() method.
-extension UIColor
-{
-    convenience init(redValue: Int, greenValue: Int, blueValue: Int)
-    {
+extension UIColor {
+    convenience init(redValue: Int, greenValue: Int, blueValue: Int) {
         let newRed   = CGFloat(Double(redValue) / 255.0)
         let newGreen = CGFloat(Double(greenValue) / 255.0)
         let newBlue  = CGFloat(Double(blueValue) / 255.0)
         
         self.init(red: newRed, green: newGreen, blue: newBlue, alpha: CGFloat(1.0))
     }
+    
+    func pistachio() -> UIColor {
+        return UIColor(redValue: 147, greenValue: 197, blueValue: 114)
+    }
+    // solution: 왜 class method?
 }
+
 
 
 
