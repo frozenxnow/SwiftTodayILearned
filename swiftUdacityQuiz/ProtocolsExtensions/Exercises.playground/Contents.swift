@@ -313,13 +313,6 @@ extension UIColor {
     func pistachio() -> UIColor {
         return UIColor(redValue: 147, greenValue: 197, blueValue: 114)
     }
-    // solution: 왜 class method?
 }
-
-
-
-
-
-
 
 
