@@ -111,5 +111,8 @@ var goalTimes = oldTimes.map(){(time: String) -> String in
     return goalTimeString as String
 }
 
+print(goalTimes)
+
+
 
 
