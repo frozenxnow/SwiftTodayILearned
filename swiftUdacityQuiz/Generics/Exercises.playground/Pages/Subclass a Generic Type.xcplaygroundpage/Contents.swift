@@ -14,12 +14,35 @@ class IntAnalyzer<T: BinaryInteger> {
 //: Subclass `IntAnalyzer` to create a new struct called `IntsAnalyzer`. `IntsAnalyzer` will include a new property called `value2` which should use the generic type inherited from `IntAnalyzer`.
 //:
 
+class IntsAnalyzer<T: BinaryInteger>: IntAnalyzer<T> {
+    let value2: T
+    
+    init(value1: T,value2: T) {
+        self.value2 = value2
+        super.init(value1: value1)
+    }
+}
+
 //: - Callout(Exercise):
 //: Extend `IntsAnalyzer` so that it includes a function called `analyzeInts` which prints if `value1` and `value2` are equal, if they share the same sign, and if they have the same number of trailing zero bits (e.g. `value1.trailingZeroBitCount`).
 //:
+
+extension IntsAnalyzer {
+    func analyzeInts() {
+        print(value1 == value2)
+        print(value1.bitWidth == value2.bitWidth)
+        print(value1.trailingZeroBitCount == value2.trailingZeroBitCount)
+    }
+}
 
 //: - Callout(Exercise):
 //: Create an instance of `IntsAnalyzer`, then call the `analyzeInts` function.
 //:
 
+
+let v2 = IntsAnalyzer(value1: 5, value2: 5)
+
+v2.analyzeInts()
+
 //: [Next](@next)
+

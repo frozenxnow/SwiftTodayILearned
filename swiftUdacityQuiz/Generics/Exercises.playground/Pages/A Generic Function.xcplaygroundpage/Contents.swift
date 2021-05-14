@@ -2,7 +2,7 @@
 //: ### A Generic Function
 //: The following exercises will use the `printIfUIResponder` function.
 //:
-func printIfUIResponder<Type: UIResponder>(_ argument: Type) {
+func printIfUIResponder<T: UIResponder>(_ argument: T) {
     print(type(of: argument))
 }
 
@@ -11,10 +11,9 @@ func printIfUIResponder<Type: UIResponder>(_ argument: Type) {
 //:
 import UIKit
 
-/*
+
 printIfUIResponder(UIView())
-printIfUIResponder(UIFont())
+// printIfUIResponder(UIFont())
 printIfUIResponder(UILabel())
-*/
 
 //: [Next](@next)
